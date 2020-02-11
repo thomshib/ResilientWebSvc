@@ -33,15 +33,20 @@ namespace ResilientWebSvc.Controllers
             
             if(_requestCount % 4 == 0){
                 var rng = new Random();
-                var result =  Enumerable.Range(1, 5).Select(index => new WeatherForecast
-                {
-                    Date = DateTime.Now.AddDays(index),
-                    TemperatureC = rng.Next(-20, 55),
-                    Summary = Summaries[rng.Next(Summaries.Length)]
-                })
-                .ToArray();
 
-                return Ok(result);
+                var resultTask = Task.Run(() => {
+                    return
+                        Enumerable.Range(1, 5).Select(index => new WeatherForecast
+                        {
+                            Date = DateTime.Now.AddDays(index),
+                            TemperatureC = rng.Next(-20, 55),
+                            Summary = Summaries[rng.Next(Summaries.Length)]
+                        })
+                        .ToArray();
+                });
+
+                var response = await resultTask;
+                return Ok(response);
 
             }
 
