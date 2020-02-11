@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "/Users/shibut/.dotnet/store/|arch|/|tfm|",
+      "/Users/shibut/.nuget/packages"
+    ]
+  }
+}
