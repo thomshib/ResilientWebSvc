@@ -10,9 +10,12 @@ using Newtonsoft.Json;
 
 namespace ResilientWebSvc.Controllers
 {
+
+[ApiController]
+[Route("[controller]")]
 public class WeatherAggregatorController:ControllerBase{
 
-private readonly ILogger<WeatherAggregatorController> _logger;
+        private readonly ILogger<WeatherAggregatorController> _logger;
 
         public WeatherAggregatorController(ILogger<WeatherAggregatorController> logger)
         {
@@ -40,8 +43,18 @@ private readonly ILogger<WeatherAggregatorController> _logger;
         }
 
         private HttpClient GetHttpClient(){
-            var httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://localhost:5000/api");
+
+            //ByPass SSL validation checks
+            var handler = new HttpClientHandler();
+            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+            handler.ServerCertificateCustomValidationCallback = 
+            (httpRequestMessage,cert,certChain,policyErrors) => {
+                return true;
+            };
+
+
+            var httpClient = new HttpClient(handler);
+            httpClient.BaseAddress = new Uri("https://localhost:5001/");
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             return httpClient;

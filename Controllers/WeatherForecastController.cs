@@ -27,10 +27,10 @@ namespace ResilientWebSvc.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast>  Get()
+        public async Task<IActionResult>  Get()
         {
             _requestCount++;
-            /*
+            
             if(_requestCount % 4 == 0){
                 var rng = new Random();
                 var result =  Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -47,19 +47,9 @@ namespace ResilientWebSvc.Controllers
 
             return StatusCode((int) HttpStatusCode.InternalServerError,"Error");
 
-            */
+            
 
              
-                var rng = new Random();
-                var result =  Enumerable.Range(1, 5).Select(index => new WeatherForecast
-                {
-                    Date = DateTime.Now.AddDays(index),
-                    TemperatureC = rng.Next(-20, 55),
-                    Summary = Summaries[rng.Next(Summaries.Length)]
-                })
-                .ToArray();
-
-                return result;
 
            
         }
