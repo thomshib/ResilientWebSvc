@@ -25,16 +25,49 @@ namespace ResilientWebSvc.Controllers
         {
             _logger = logger;
         }
+
+
+#region combinedFalloutRetry&Timeout policy
+     [HttpGet]
+         public async Task<IActionResult>  Get()
+         {
+             _requestCount++;
+            
+                  if(_requestCount % 6 != 0){
+                        await Task.Delay(10000); //simulate delay for 10 secs
+                  }
+                 var rng = new Random();
+                 var resultTask = Task.Run(() => {
+                     return
+                         Enumerable.Range(1, 5).Select(index => new WeatherForecast
+                         {
+                             Date = DateTime.Now.AddDays(index),
+                             TemperatureC = rng.Next(-20, 55),
+                             Summary = Summaries[rng.Next(Summaries.Length)]
+                         })
+                         .ToArray();
+                 });
+
+                 var response = await resultTask;
+                 return Ok(response);
+
+             }
+
+          
+
+#endregion
+
+
 #region Fallback
 
      
-        [HttpGet]
+       /*  [HttpGet]
         public async Task<IActionResult>  Get()
         {
             
             return await Task.Run(() => StatusCode((int) HttpStatusCode.InternalServerError,"Error"));
            
-        }
+        } */
 #endregion
         
     #region UnAuthorized Retry
